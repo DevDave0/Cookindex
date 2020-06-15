@@ -1,0 +1,2 @@
+class recipe
+end

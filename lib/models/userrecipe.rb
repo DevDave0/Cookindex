@@ -1,0 +1,2 @@
+class UserRecipe
+end
