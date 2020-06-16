@@ -27,13 +27,12 @@ class CommandLine
             
             if User.exists?(:name => user_name)
                 $user = User.find_by(name: user_name)
-                puts "Welcome back #{$user.name}"
+                puts "Welcome back, #{$user.name}!"
             else
                 puts "We could not find your username"
                 add_new_user
             end
         else
-            puts "Please create a new account."
             add_new_user
         end
     end
@@ -50,6 +49,8 @@ class CommandLine
         5. Delete a recipe from your favorites"
         user_input = gets.chomp
             case user_input 
+            when "0"
+                exit 
             when "1" 
                 # runs search for recipe by ingredient method
                 find_recipe_by_ingredient
@@ -81,7 +82,7 @@ class CommandLine
         else
             new_user = User.create(name: user_name)
             $user = new_user
-            puts "Welcome back #{$user.name}"
+            puts "Hello, #{$user.name}!"
         end
 
     end 
