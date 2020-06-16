@@ -5,8 +5,8 @@ UserRecipe.destroy_all
 RecipeIngredient.destroy_all
 
 
-esther = User.find_or_create_by(name: 'Esther')
-david = User.find_or_create_by(name: 'David')
+esther = User.find_or_create_by(name: 'esther')
+david = User.find_or_create_by(name: 'david')
 
 pasta = Recipe.find_or_create_by(name: 'Pasta') 
 bread = Recipe.find_or_create_by(name: 'Bread') 
