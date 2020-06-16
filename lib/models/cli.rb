@@ -213,17 +213,12 @@ class CommandLine
         puts "Please enter the name of the recipe you would like to delete."
         user_input = gets.chomp
         recipe_delete = Recipe.find_by(name: user_input)
-        #binding.pry
         result.each do |ur|
             if ur.recipe_id == recipe_delete.id
-                #result.destroy(ur.id)
                 UserRecipe.all.delete(ur.id)
-
             end
-        
         end 
         menu
-
     end 
 
     # helper methods
