@@ -21,10 +21,6 @@ class CommandLine
         if user_input == 'yes'
             puts "What is your username?"
             user_name = gets.chomp.downcase
-            # if User.all.include?(name: user_name)
-            # $user = user_name
-            # puts "Welcome back"
-            
             if User.exists?(:name => user_name)
                 $user = User.find_by(name: user_name)
                 puts "Welcome back, #{$user.name}!"
@@ -52,17 +48,13 @@ class CommandLine
             when "0"
                 exit 
             when "1" 
-                # runs search for recipe by ingredient method
                 find_recipe_by_ingredient
             when "2"
-                # returns all fave recipes
                 favorite_recipes
             when "3"
-                # delete a recipe from your favorites
                 delete_recipe
             when "4" 
-                # returns highest rated recipes 
-                puts "i'm popular"
+                highest_rated_recipe
             when "5"
                 practice
             else 
@@ -113,19 +105,10 @@ class CommandLine
             puts recipe_names 
             view_recipe
 
-            #this is where I changed
-            add_to_favorites
-
         else 
             puts "Cannot find ingredient. Try something else!" 
             find_recipe_by_ingredient
         end 
-
-        # puts "Would you like to add this to your favorite recipes? (yes/no)"
-        # user_input = gets.chomp.downcase
-        # if user_input == "yes"
-        #     puts "Which recipe would you like to save?"
-
     end 
 
     def view_recipe
@@ -152,11 +135,6 @@ class CommandLine
                             menu
                         end
                     end  
-                
-                    #binding.pry
-                #     puts "Please give this recipe a rating"
-                #     input = gets.chomp
-                #     UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
                 else
                     menu
                 end
@@ -166,29 +144,7 @@ class CommandLine
         end
     end
 
-    # def add_to_favorites
-    #     puts "Would you like to save this recipe to your favorites? (yes/no) "
-    #             user_input = gets.chomp.downcase
-    #             if user_input == 'yes'
-    #                 puts "Please give this recipe a rating"
-    #                 input = gets.chomp
-    #                 UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
-    #             else
-    #                 menu
-    #             end
-    # end
-
-    # def check_if_in_favorites(recipe)
-    #     if !favorite_recipes.includes?(recipe)
-    #         add_to_favorites
-    #     else
-    #         menu
-    #     end
-    #     binding.pry
-    # end
-
     def favorite_recipes
-
         favorites = []
         result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
         result.each_with_index do |ur, i|
@@ -196,6 +152,7 @@ class CommandLine
             favorites << "#{i+1}. #{recipe.name}"
         end
         puts "Here are your favorite Recipes!"
+        puts "#{line_break}"
         puts favorites
         view_recipe
         menu
@@ -218,8 +175,36 @@ class CommandLine
                 UserRecipe.all.delete(ur.id)
             end
         end 
+        puts "Recipe deleted!"
         menu
     end 
+
+    def highest_rated_recipe
+        favorites = []
+        result = UserRecipe.order(rating: :desc)
+        result.each do |ur|
+            if ur.user_id == $user.id
+                favorites << ur
+            end
+        end
+        rated_recipes = [ ] 
+        favorites.each do |ur|
+            result = Recipe.find(ur.recipe_id).name
+            rated_recipes << result 
+        end
+
+        neat_array = []
+        rated_recipes.each_with_index do |recipe, i|
+            neat_array << "#{i+1}. #{rated_recipes[i]}"
+        end 
+
+        puts "Here are your highest rated recipes!"
+        puts "#{line_break}"
+        puts neat_array
+        
+        menu
+
+    end
 
     # helper methods
 
