@@ -7,5 +7,4 @@ gem "pry"
 gem "require_all"
 gem 'activerecord'
 gem 'rake'
-gem 'faker'
-
+gem 'rainbow'

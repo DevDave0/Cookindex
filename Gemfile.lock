@@ -14,8 +14,6 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     coderay (1.1.3)
     concurrent-ruby (1.1.6)
-    faker (2.12.0)
-      i18n (>= 1.6, < 2)
     i18n (1.8.3)
       concurrent-ruby (~> 1.0)
     method_source (1.0.0)
@@ -25,9 +23,10 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-protection (2.0.8.1)
       rack
+    rainbow (3.0.0)
     rake (13.0.1)
     require_all (3.0.0)
     ruby2_keywords (0.0.2)
@@ -51,8 +50,8 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
-  faker
   pry
+  rainbow
   rake
   require_all
   sinatra-activerecord
