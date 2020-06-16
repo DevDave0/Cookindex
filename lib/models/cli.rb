@@ -121,20 +121,38 @@ class CommandLine
             puts "Would you like to save this recipe to your favorites? (yes/no) "
             user_input = gets.chomp.downcase
                 if user_input == 'yes'
-                    results = UserRecipe.all.select do |ur|
-                        ur.user_id == $user.id
-                    end  
-                    results.each do |ur|
-                        if ur.recipe_id == recipe.id
-                            puts "This recipe is already in your favorites."
-                            menu
-                        else 
-                            puts "Please give this recipe a rating"
-                            input = gets.chomp
-                            UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
-                            menu
-                        end
-                    end  
+                    result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
+                    id_array = result.map{|ri| ri.recipe_id}
+                    name_array = id_array.map do |id|
+                        recipe_name = Recipe.find(id)
+                        recipe_name.name
+                    end
+                    
+                    if name_array.include?(recipe.name)
+                        puts "This recipe is already in your favorites" 
+                        menu
+                    else 
+                        puts "Please give this recipe a rating(0-10)"
+                        input = gets.chomp 
+                        UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+                        menu
+                    end
+                    
+                    # binding.pry
+                    # results = UserRecipe.all.select do |ur|
+                    #     ur.user_id == $user.id
+                    # end  
+                    # results.each do |ur|
+                    #     if ur.recipe_id == recipe.id
+                    #         puts "This recipe is already in your favorites."
+                    #         menu
+                    #     else 
+                    #         puts "Please give this recipe a rating"
+                    #         input = gets.chomp
+                    #         UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+                    #         menu
+                    #     end
+                    # end  
                 else
                     menu
                 end
@@ -143,6 +161,7 @@ class CommandLine
             view_recipe 
         end
     end
+
 
     def favorite_recipes
         favorites = []
