@@ -44,9 +44,9 @@ class CommandLine
         0. Exit
         1. Search for a recipe by ingredient 
         2. View your favorite recipes 
-        3. View healthy recipes 
+        3. Delete a recipe from your favorites 
         4. View highest rated recipes 
-        5. Delete a recipe from your favorites"
+        5. -----"
         user_input = gets.chomp
             case user_input 
             when "0"
@@ -58,8 +58,8 @@ class CommandLine
                 # returns all fave recipes
                 favorite_recipes
             when "3"
-                # returns all healthy recipes
-                puts "i'm healthy"
+                # delete a recipe from your favorites
+                delete_recipe
             when "4" 
                 # returns highest rated recipes 
                 puts "i'm popular"
@@ -200,6 +200,31 @@ class CommandLine
         view_recipe
         menu
     end
+
+    def delete_recipe
+        favorites = []
+        result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
+        result.each_with_index do |ur, i|
+            recipe = Recipe.find(ur.recipe_id)
+            favorites << "#{i+1}. #{recipe.name}"
+        end
+        puts "Here are your favorite Recipes!"
+        puts favorites
+        puts "Please enter the name of the recipe you would like to delete."
+        user_input = gets.chomp
+        recipe_delete = Recipe.find_by(name: user_input)
+        #binding.pry
+        result.each do |ur|
+            if ur.recipe_id == recipe_delete.id
+                #result.destroy(ur.id)
+                UserRecipe.all.delete(ur.id)
+
+            end
+        
+        end 
+        menu
+
+    end 
 
     # helper methods
 
