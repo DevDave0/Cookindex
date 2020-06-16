@@ -56,7 +56,7 @@ class CommandLine
                 find_recipe_by_ingredient
             when "2"
                 # returns all fave recipes
-                puts "faves"
+                favorite_recipes
             when "3"
                 # returns all healthy recipes
                 puts "i'm healthy"
@@ -64,8 +64,7 @@ class CommandLine
                 # returns highest rated recipes 
                 puts "i'm popular"
             when "5"
-                # removes a recipe from favorites
-                puts "bye"
+                practice
             else 
                 puts "Invalid entry."
                 menu
@@ -88,7 +87,7 @@ class CommandLine
     end 
 
     def find_recipe_by_ingredient
-        puts "Please enter ingredient or recipe name"
+        puts "Please enter ingredient name"
         user_input = gets.chomp
 
         if Ingredient.exists?(:name => user_input)
@@ -109,17 +108,92 @@ class CommandLine
             all_results.each_with_index do |recipe, i| 
                 recipe_names << "#{i+1}. #{recipe}"
             end 
+
+            puts "Here are some recipes that have #{user_input}."
             puts recipe_names 
+            view_recipe
+
+            #this is where I changed
+            add_to_favorites
+
         else 
             puts "Cannot find ingredient. Try something else!" 
             find_recipe_by_ingredient
         end 
+
+        # puts "Would you like to add this to your favorite recipes? (yes/no)"
+        # user_input = gets.chomp.downcase
+        # if user_input == "yes"
+        #     puts "Which recipe would you like to save?"
+
     end 
+
+    def view_recipe
+        puts "Please enter the name of the recipe you would like to see."
+        user_input = gets.chomp
+        # add downcase when we get api info
+        if Recipe.exists?(:name => user_input)
+            recipe = Recipe.find_by(:name => user_input)
+            puts recipe.name #and more info about the recipe
+            puts "Would you like to save this recipe to your favorites? (yes/no) "
+            user_input = gets.chomp.downcase
+                if user_input == 'yes'
+                    binding.pry
+                    puts "Please give this recipe a rating"
+                    input = gets.chomp
+                    UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+                else
+                    menu
+                end
+        else 
+            puts "Cannot find recipe. Try something else!" 
+            view_recipe 
+        end
+    end
+
+    # def add_to_favorites
+    #     puts "Would you like to save this recipe to your favorites? (yes/no) "
+    #             user_input = gets.chomp.downcase
+    #             if user_input == 'yes'
+    #                 puts "Please give this recipe a rating"
+    #                 input = gets.chomp
+    #                 UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+    #             else
+    #                 menu
+    #             end
+    # end
+
+    # def check_if_in_favorites(recipe)
+    #     if !favorite_recipes.includes?(recipe)
+    #         add_to_favorites
+    #     else
+    #         menu
+    #     end
+    #     binding.pry
+    # end
+
+    def favorite_recipes
+
+        favorites = []
+        result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
+        result.each_with_index do |ur, i|
+            recipe = Recipe.find(ur.recipe_id)
+            favorites << "#{i+1}. #{recipe.name}"
+        end
+        puts "Here are your favorite Recipes!"
+        puts favorites
+        view_recipe
+        menu
+    end
 
     # helper methods
 
     def line_break
         return "--------------------------------------------------------------------------------------------"
+    end
+
+    def practice
+        binding.pry
     end
 
 
