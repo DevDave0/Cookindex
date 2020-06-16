@@ -17,7 +17,7 @@ class CommandLine
 
 
     def menu
-        puts "
+        puts "#{line_break}
         Please select from the following options - using numbers (0-5) as your input: 
         0. Exit
         1. Search for a recipe by ingredient 
@@ -25,6 +25,15 @@ class CommandLine
         3. View healthy recipes 
         4. View highest rated recipes 
         5. Delete a recipe from your favorites"
+    end
+
+
+
+
+    # helper methods
+
+    def line_break
+        return "--------------------------------------------------------------------------------------------"
     end
 
 
