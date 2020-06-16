@@ -48,6 +48,27 @@ class CommandLine
         3. View healthy recipes 
         4. View highest rated recipes 
         5. Delete a recipe from your favorites"
+        user_input = gets.chomp
+            case user_input 
+            when "1" 
+                # runs search for recipe by ingredient method
+                find_recipe_by_ingredient
+            when "2"
+                # returns all fave recipes
+                puts "faves"
+            when "3"
+                # returns all healthy recipes
+                puts "i'm healthy"
+            when "4" 
+                # returns highest rated recipes 
+                puts "i'm popular"
+            when "5"
+                # removes a recipe from favorites
+                puts "bye"
+            else 
+                puts "Invalid entry."
+                menu
+            end 
     end
 
 
@@ -60,15 +81,39 @@ class CommandLine
         else
             new_user = User.create(name: user_name)
             $user = new_user
+            puts "Welcome back #{$user.name}"
         end
 
     end 
 
+    def find_recipe_by_ingredient
+        puts "Please enter ingredient or recipe name"
+        user_input = gets.chomp
 
-
-
-
-
+        if Ingredient.exists?(:name => user_input)
+            ing_id = Ingredient.find_by(:name => user_input)
+            
+            result = RecipeIngredient.all.select do |ri|
+                ri.ingredient_id == ing_id.id
+            end 
+            new_result = result.map do |ri|
+                ri.recipe_id 
+            end
+            all_results = new_result.map do |id|
+                recipe = Recipe.find(id)
+                recipe.name
+            end 
+    
+            recipe_names = [ ] 
+            all_results.each_with_index do |recipe, i| 
+                recipe_names << "#{i+1}. #{recipe}"
+            end 
+            puts recipe_names 
+        else 
+            puts "Cannot find ingredient. Try something else!" 
+            find_recipe_by_ingredient
+        end 
+    end 
 
     # helper methods
 
