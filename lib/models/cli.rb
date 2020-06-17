@@ -46,6 +46,7 @@ class CommandLine
         user_input = gets.chomp
             case user_input 
             when "0"
+                puts Rainbow("Happy Eating!").salmon
                 exit 
             when "1" 
                 find_recipe_by_ingredient
