@@ -1,7 +1,7 @@
 # CookIndex: A recipe command line program
 Flatiron School's module 1 project. 
 
-![cookindex]cookindex.png
+![cookindex](https://github.com/DevDave0/ruby-project-guidelines-wdc01-seng-ft-060120/blob/master/cookindex.png)
 
 ## Project Details
 
