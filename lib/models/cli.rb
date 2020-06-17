@@ -53,7 +53,9 @@ class CommandLine
         user_input = gets.chomp
             case user_input 
             when "0"
-                puts Rainbow("Happy Eating!").salmon
+                puts Rainbow("
+                    Happy Eating!
+                    ").salmon
                 exit 
             when "1" 
                 find_recipe_by_ingredient
@@ -108,7 +110,9 @@ class CommandLine
             puts recipe_names 
             view_recipe
         else 
-            puts Rainbow("Cannot find ingredient. Try something else!").red 
+            puts Rainbow("
+                Cannot find ingredient. Try something else!
+                ").red 
             find_recipe_by_ingredient
         end 
     end 
@@ -131,7 +135,9 @@ class CommandLine
                     end
                     
                     if name_array.include?(recipe.name)
-                        puts Rainbow("This recipe is already in your favorites").red
+                        puts Rainbow("
+                            This recipe is already in your favorites
+                            ").red
                         menu
                     else 
                         puts "Please give this recipe a rating(0-10)"
@@ -160,7 +166,9 @@ class CommandLine
                     menu
                 end
         else 
-            puts Rainbow("Cannot find recipe. Try something else!").red
+            puts Rainbow("
+                Cannot find recipe. Try something else!
+                ").red
             view_recipe 
         end
     end
@@ -198,7 +206,9 @@ class CommandLine
                 UserRecipe.all.delete(ur.id)
             end
         end 
-        puts Rainbow("Recipe deleted!").red
+        puts Rainbow(" 
+            Recipe deleted!
+            ").red
         menu
     end 
 
@@ -240,7 +250,9 @@ class CommandLine
         result.each do |user|
             if user == username_delete.id
                 User.all.delete(user)
-                puts Rainbow("Username deleted!").red
+                puts Rainbow("
+                    Username deleted!
+                    ").red
             end
         end 
         menu
@@ -258,14 +270,11 @@ class CommandLine
     # helper methods
 
     def line_break
-        return "--------------------------------------------------------------------------------------------"
+        return "--------------------------------------------------------------------------------"
     end
 
     def practice
         binding.pry
     end
-
-
-
 
 end
