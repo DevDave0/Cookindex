@@ -2,6 +2,7 @@ require 'rainbow'
 require 'pry'
 
 
+
 class CommandLine
 
     def welcome
@@ -92,6 +93,8 @@ class CommandLine
         puts "Please enter ingredient name"
         user_input = gets.chomp
 
+        # get_specific_recipe_from_api(user_input)
+
         if Ingredient.exists?(:name => user_input)
             ing_id = Ingredient.find_by(:name => user_input)
             result = RecipeIngredient.all.select{|ri| ri.ingredient_id == ing_id.id}
@@ -147,21 +150,6 @@ class CommandLine
                         menu
                     end
                     
-                    # binding.pry
-                    # results = UserRecipe.all.select do |ur|
-                    #     ur.user_id == $user.id
-                    # end  
-                    # results.each do |ur|
-                    #     if ur.recipe_id == recipe.id
-                    #         puts "This recipe is already in your favorites."
-                    #         menu
-                    #     else 
-                    #         puts "Please give this recipe a rating"
-                    #         input = gets.chomp
-                    #         UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
-                    #         menu
-                    #     end
-                    # end  
                 else
                     menu
                 end
