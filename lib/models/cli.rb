@@ -35,6 +35,13 @@ class CommandLine
 
 
     def menu
+        puts Rainbow("
+            ███╗   ███╗███████╗███╗   ██╗██╗   ██╗
+            ████╗ ████║██╔════╝████╗  ██║██║   ██║
+            ██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
+            ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
+            ██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
+            ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ").cyan
         puts "#{line_break}"
         puts Rainbow("Please select from the following options - using numbers (0-5) as your input: 
         0. Exit
