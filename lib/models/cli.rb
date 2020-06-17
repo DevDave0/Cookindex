@@ -25,7 +25,7 @@ class CommandLine
                 $user = User.find_by(name: user_name)
                 puts "Welcome back, #{$user.name}!"
             else
-                puts "We could not find your username"
+                puts Rainbow("We could not find your username").red
                 add_new_user
             end
         else
@@ -35,14 +35,14 @@ class CommandLine
 
 
     def menu
-        puts "#{line_break}
-        Please select from the following options - using numbers (0-5) as your input: 
+        puts "#{line_break}"
+        puts Rainbow("Please select from the following options - using numbers (0-5) as your input: 
         0. Exit
         1. Search for a recipe by ingredient 
         2. View your favorite recipes 
         3. Delete a recipe from your favorites 
         4. View highest rated recipes 
-        5. -----"
+        5. Delete a username").beige
         user_input = gets.chomp
             case user_input 
             when "0"
@@ -56,7 +56,7 @@ class CommandLine
             when "4" 
                 highest_rated_recipe
             when "5"
-                practice
+                delete_account
             else 
                 puts "Invalid entry."
                 menu
@@ -73,7 +73,7 @@ class CommandLine
         else
             new_user = User.create(name: user_name)
             $user = new_user
-            puts "Hello, #{$user.name}!"
+            puts Rainbow("Hello, #{$user.name}!").lightcoral
         end
 
     end 
@@ -84,18 +84,13 @@ class CommandLine
 
         if Ingredient.exists?(:name => user_input)
             ing_id = Ingredient.find_by(:name => user_input)
-            
-            result = RecipeIngredient.all.select do |ri|
-                ri.ingredient_id == ing_id.id
-            end 
-            new_result = result.map do |ri|
-                ri.recipe_id 
-            end
+            result = RecipeIngredient.all.select{|ri| ri.ingredient_id == ing_id.id}
+            new_result = result.map{|ri| ri.recipe_id}
             all_results = new_result.map do |id|
                 recipe = Recipe.find(id)
                 recipe.name
             end 
-    
+
             recipe_names = [ ] 
             all_results.each_with_index do |recipe, i| 
                 recipe_names << "#{i+1}. #{recipe}"
@@ -104,9 +99,8 @@ class CommandLine
             puts "Here are some recipes that have #{user_input}."
             puts recipe_names 
             view_recipe
-
         else 
-            puts "Cannot find ingredient. Try something else!" 
+            puts Rainbow("Cannot find ingredient. Try something else!").red 
             find_recipe_by_ingredient
         end 
     end 
@@ -129,7 +123,7 @@ class CommandLine
                     end
                     
                     if name_array.include?(recipe.name)
-                        puts "This recipe is already in your favorites" 
+                        puts Rainbow("This recipe is already in your favorites").red
                         menu
                     else 
                         puts "Please give this recipe a rating(0-10)"
@@ -157,7 +151,7 @@ class CommandLine
                     menu
                 end
         else 
-            puts "Cannot find recipe. Try something else!" 
+            puts Rainbow("Cannot find recipe. Try something else!").red
             view_recipe 
         end
     end
@@ -185,6 +179,7 @@ class CommandLine
             favorites << "#{i+1}. #{recipe.name}"
         end
         puts "Here are your favorite Recipes!"
+        puts "#{line_break}"
         puts favorites
         puts "Please enter the name of the recipe you would like to delete."
         user_input = gets.chomp
@@ -194,7 +189,7 @@ class CommandLine
                 UserRecipe.all.delete(ur.id)
             end
         end 
-        puts "Recipe deleted!"
+        puts Rainbow("Recipe deleted!").red
         menu
     end 
 
@@ -220,9 +215,35 @@ class CommandLine
         puts "Here are your highest rated recipes!"
         puts "#{line_break}"
         puts neat_array
+
+        view_recipe
         
         menu
 
+    end
+
+    def delete_account
+        result = User.all.map{|user| user.id}
+        puts all_users
+        puts "Please enter the username you would like to delete."
+        user_input = gets.chomp
+        username_delete = User.find_by(name: user_input)
+        result.each do |user|
+            if user == username_delete.id
+                User.all.delete(user)
+                puts Rainbow("Username deleted!").red
+            end
+        end 
+        menu
+    end
+
+    def all_users
+        all_users = []
+        result = User.all
+        result.each_with_index do |user, i|
+            all_users << "#{i+1}. #{user.name}"
+        end
+        all_users
     end
 
     # helper methods
@@ -234,6 +255,7 @@ class CommandLine
     def practice
         binding.pry
     end
+
 
 
 
