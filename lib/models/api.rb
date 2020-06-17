@@ -9,9 +9,9 @@ def get_specific_recipe_from_api(user_input)
     results_hash = response_hash["results"]
     recipe = []
     results_hash.each do |results|
-        if results["ingredients"] == user_input 
+        if results["ingredients"].include?(user_input)
             recipe << results["title"]
-            Recipe.find_or_create_by(name: results["title"])
+            Recipe.find_or_create_by(name: results["title"].downcase)
         end
     end
     recipe
@@ -25,7 +25,7 @@ end
 #     results_hash = response_hash["results"]
 # end
 
-def view_recipe(input)
+def view_recipe_api(input)
     # double chocolate brownies.gsub(" ", "+")
     x = input.gsub(" ", "+")
     url = "http://www.recipepuppy.com/api/?q=#{x}"
@@ -33,10 +33,11 @@ def view_recipe(input)
     response_hash = JSON.parse(response_string)
     results_hash = response_hash["results"]
     results_hash[0]
+
 end
 
 
-binding.pry
+#binding.pry
 0
 
 

@@ -44,16 +44,16 @@ class CommandLine
             ██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
             ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ ").cyan
         puts "#{line_break}"
-        puts Rainbow("Please select from the following options - using numbers (0-5) as your input: 
-        0. Exit
+        puts Rainbow("Please select from the following options - using numbers (1-6) as your input: 
         1. Search for a recipe by ingredient 
         2. View your favorite recipes 
         3. Delete a recipe from your favorites 
         4. View highest rated recipes 
-        5. Delete a username").beige
+        5. Delete account
+        6. Exit").beige
         user_input = gets.chomp
             case user_input 
-            when "0"
+            when "6"
                 puts Rainbow("
                     Happy Eating!
                     ").salmon
@@ -126,24 +126,92 @@ class CommandLine
     end 
 
     def view_recipe
+        puts "#{line_break}"
         puts "Please enter the name of the recipe you would like to see."
-        user_input = gets.chomp
-        info_array
+        puts "#{line_break}"
+        user_input = gets.chomp.downcase
+        recipe_api = view_recipe_api(user_input)
 
-        x = display_general_info(user_input)
-        display_recipe_info(x)
-
-
-
-
-
+        puts "#{line_break}"
+        puts "Recipe: #{recipe_api["title"]}"
+        puts "Link to Recipe: #{recipe_api["href"]}"
+        puts "Ingredients: #{recipe_api["ingredients"]}"
+        puts "#{line_break}"
+   
+        create_favorite(user_input)
         # add downcase when we get api info
-        if Recipe.exists?(:name => user_input)
-            recipe = Recipe.find_by(:name => user_input)
-            puts recipe.name #and more info about the recipe
-            puts "Would you like to save this recipe to your favorites? (yes/no) "
-            user_input = gets.chomp.downcase
-                if user_input == 'yes'
+        # if Recipe.exists?(:name => user_input.downcase)
+        #     recipe = Recipe.find_by(:name => user_input.downcase)
+        #     #puts recipe.name #and more info about the recipe
+
+            # puts "Would you like to save this recipe to your favorites? (yes/no) "
+            # user_input = gets.chomp.downcase
+            #     if user_input == 'yes'
+            #         result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
+            #         id_array = result.map{|ri| ri.recipe_id}
+            #         name_array = id_array.map do |id|
+            #             recipe_name = Recipe.find(id)
+            #             recipe_name.name
+            #         end
+                    
+            #         if name_array.include?(recipe.name)
+            #             puts Rainbow("
+            #                 This recipe is already in your favorites
+            #                 ").red
+            #             menu
+            #         else 
+            #             puts "Please give this recipe a rating(0-10)"
+            #             input = gets.chomp 
+            #             UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+            #             puts Rainbow("Recipe saved!").cyan
+            #             menu
+            #         end
+
+            #     else
+            #         menu
+            #     end
+        # else 
+        #     puts Rainbow("
+        #         Cannot find recipe. Try something else!
+        #         ").red
+        #     view_recipe 
+        # end
+    end
+
+    def view_recipe_favorites
+        puts "#{line_break}"
+        puts "Please enter the name of the recipe you would like to see."
+        puts "#{line_break}"
+        user_input = gets.chomp.downcase
+        recipe_api = view_recipe_api(user_input)
+
+        puts "#{line_break}"
+        puts "Recipe: #{recipe_api["title"]}"
+        puts "Link to Recipe: #{recipe_api["href"]}"
+        puts "Ingredients: #{recipe_api["ingredients"]}"
+        puts "#{line_break}"
+        return_to_menu
+
+    end 
+
+    def return_to_menu    
+        puts "Would you like to go back to the menu? (yes/no)" 
+            input = gets.chomp.downcase
+            if input == 'yes'
+                menu
+            elsif input == 'no'
+                view_recipe_favorites
+            else
+                puts "Invalid input. Please type 'yes' or 'no'"
+                return_to_menu 
+            end 
+    end 
+
+    def create_favorite(input)
+        recipe = Recipe.find_by(:name => input.downcase)
+        puts "Would you like to save this recipe to your favorites? (yes/no) "
+            input = gets.chomp.downcase
+                if input == 'yes'
                     result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
                     id_array = result.map{|ri| ri.recipe_id}
                     name_array = id_array.map do |id|
@@ -158,8 +226,8 @@ class CommandLine
                         menu
                     else 
                         puts "Please give this recipe a rating(0-10)"
-                        input = gets.chomp 
-                        UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+                        rating_input = gets.chomp 
+                        UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: rating_input.to_i)
                         puts Rainbow("Recipe saved!").cyan
                         menu
                     end
@@ -167,13 +235,7 @@ class CommandLine
                 else
                     menu
                 end
-        else 
-            puts Rainbow("
-                Cannot find recipe. Try something else!
-                ").red
-            view_recipe 
-        end
-    end
+    end 
 
 
     def favorite_recipes
@@ -181,13 +243,12 @@ class CommandLine
         result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
         result.each_with_index do |ur, i|
             recipe = Recipe.find(ur.recipe_id)
-            favorites << "#{i+1}. #{recipe.name}"
+            favorites << "#{i+1}. #{recipe.name.capitalize}"
         end
         puts "Here are your favorite Recipes!"
         puts "#{line_break}"
         puts favorites
-        view_recipe
-        menu
+        view_recipe_favorites
     end
 
     def delete_recipe
@@ -195,13 +256,13 @@ class CommandLine
         result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
         result.each_with_index do |ur, i|
             recipe = Recipe.find(ur.recipe_id)
-            favorites << "#{i+1}. #{recipe.name}"
+            favorites << "#{i+1}. #{recipe.name.capitalize}"
         end
         puts "Here are your favorite Recipes!"
         puts "#{line_break}"
         puts favorites
         puts "Please enter the name of the recipe you would like to delete."
-        user_input = gets.chomp
+        user_input = gets.chomp.downcase
         recipe_delete = Recipe.find_by(name: user_input)
         result.each do |ur|
             if ur.recipe_id == recipe_delete.id
@@ -237,27 +298,29 @@ class CommandLine
         puts "#{line_break}"
         puts neat_array
 
-        view_recipe
+        view_recipe_favorites
         
-        menu
+        return_to_menu
 
     end
 
     def delete_account
-        result = User.all.map{|user| user.id}
-        puts all_users
-        puts "Please enter the username you would like to delete."
-        user_input = gets.chomp
-        username_delete = User.find_by(name: user_input)
-        result.each do |user|
-            if user == username_delete.id
-                User.all.delete(user)
-                puts Rainbow("
-                    Username deleted!
-                    ").red
-            end
-        end 
-        menu
+        puts "Do you want to delete this account?"
+        user_input = gets.chomp.downcase
+            if user_input == 'yes'
+                User.all.delete($user)
+                puts Rainbow(" 
+            Your account has been deleted!
+            ").red
+                puts ("
+                Thank you!
+                ")
+                exit 
+            elsif user_input == 'no' 
+                menu 
+            else 
+                puts "Invalid input. Please type 'yes' or 'no'"
+            end 
     end
 
     def all_users
