@@ -8,3 +8,5 @@ gem "require_all"
 gem 'activerecord'
 gem 'rake'
 gem 'rainbow'
+gem 'rest-client'
+gem 'json'
