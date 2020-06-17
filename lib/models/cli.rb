@@ -93,6 +93,8 @@ class CommandLine
         puts "Please enter ingredient name"
         user_input = gets.chomp
         api_array = get_specific_recipe_from_api(user_input)
+        info_array = get_specific_recipe_from_api(user_input)
+
         if api_array == 0 
             puts Rainbow("
                 Cannot find ingredient. Try something else!
@@ -126,6 +128,15 @@ class CommandLine
     def view_recipe
         puts "Please enter the name of the recipe you would like to see."
         user_input = gets.chomp
+        info_array
+
+        x = display_general_info(user_input)
+        display_recipe_info(x)
+
+
+
+
+
         # add downcase when we get api info
         if Recipe.exists?(:name => user_input)
             recipe = Recipe.find_by(:name => user_input)
@@ -152,7 +163,7 @@ class CommandLine
                         puts Rainbow("Recipe saved!").cyan
                         menu
                     end
-                    
+
                 else
                     menu
                 end

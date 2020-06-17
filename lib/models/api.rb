@@ -2,8 +2,6 @@ require 'rest-client'
 require 'json'
 require 'pry'
 
-API_BASEURL = "http://www.recipepuppy.com/api/"
-
 def get_specific_recipe_from_api(user_input)
     url = "http://www.recipepuppy.com/api/?i=#{user_input}"
     response_string = RestClient.get(url)
@@ -19,11 +17,50 @@ def get_specific_recipe_from_api(user_input)
     recipe
 end
 
+# def display_general_info(user_input)
+#     result_hash = []
+#     url = "http://www.recipepuppy.com/api/?i=#{user_input}"
+#     response_string = RestClient.get(url)
+#     response_hash = JSON.parse(response_string)
+#     results_hash = response_hash["results"]
+# end
+
+def view_recipe(input)
+    # double chocolate brownies.gsub(" ", "+")
+    x = input.gsub(" ", "+")
+    url = "http://www.recipepuppy.com/api/?q=#{x}"
+    response_string = RestClient.get(url)
+    response_hash = JSON.parse(response_string)
+    results_hash = response_hash["results"]
+    results_hash[0]
+end
 
 
-def display_recipe_info(user_input)
+binding.pry
+0
 
-end 
+
+# def display_recipe_title(input)
+#     recipe = [] 
+#     input.each do |results|
+#         if results["ingredients"] == input
+#             recipe << results["title"]
+#             Recipe.find_or_create_by(name: results["title"])
+#         end
+#     end
+#     recipe
+# end 
+
+# def display_recipe_info(input)
+#     recipe = [] 
+#     input.each do |results|
+#         if results["ingredients"] == user_input 
+#             recipe << results["title"]
+#             Recipe.find_or_create_by(name: results["title"])
+#         end
+#     end
+#     recipe
+# end 
 
 
 # binding.pry
