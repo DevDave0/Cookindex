@@ -33,12 +33,17 @@ def view_recipe_api(input)
     response_hash = JSON.parse(response_string)
     results_hash = response_hash["results"]
     results_hash[0]
-
+    # results_hash.each do |hash|
+    #     if hash['title'].downcase == y
+    #     end
+    # end
+    # # binding.pry
 end
 
+# view_recipe_api('Zesty Bean Dip')
 
-#binding.pry
-0
+# binding.pry
+# 0
 
 
 # def display_recipe_title(input)

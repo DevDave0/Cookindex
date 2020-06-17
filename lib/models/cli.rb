@@ -48,7 +48,7 @@ class CommandLine
         1. Search for a recipe by ingredient 
         2. View your favorite recipes 
         3. Delete a recipe from your favorites 
-        4. View highest rated recipes 
+        4. View your highest rated recipes 
         5. Delete account
         6. Exit").beige
         user_input = gets.chomp
@@ -91,7 +91,7 @@ class CommandLine
 
     def find_recipe_by_ingredient
         puts "Please enter ingredient name"
-        user_input = gets.chomp
+        user_input = gets.chomp.downcase
         api_array = get_specific_recipe_from_api(user_input)
         info_array = get_specific_recipe_from_api(user_input)
 
@@ -132,13 +132,19 @@ class CommandLine
         user_input = gets.chomp.downcase
         recipe_api = view_recipe_api(user_input)
 
-        puts "#{line_break}"
-        puts "Recipe: #{recipe_api["title"]}"
-        puts "Link to Recipe: #{recipe_api["href"]}"
-        puts "Ingredients: #{recipe_api["ingredients"]}"
-        puts "#{line_break}"
-   
-        create_favorite(user_input)
+        # binding.pry
+
+        if recipe_api['title'].downcase.include?(user_input)
+            puts "#{line_break}"
+            puts "Recipe: #{recipe_api["title"]}"
+            puts "Link to Recipe: #{recipe_api["href"]}"
+            puts "Ingredients: #{recipe_api["ingredients"]}"
+            puts "#{line_break}"
+            create_favorite(user_input)
+        else
+            puts "Invalid input, please try again."
+            view_recipe 
+        end
         # add downcase when we get api info
         # if Recipe.exists?(:name => user_input.downcase)
         #     recipe = Recipe.find_by(:name => user_input.downcase)
@@ -185,12 +191,17 @@ class CommandLine
         user_input = gets.chomp.downcase
         recipe_api = view_recipe_api(user_input)
 
-        puts "#{line_break}"
-        puts "Recipe: #{recipe_api["title"]}"
-        puts "Link to Recipe: #{recipe_api["href"]}"
-        puts "Ingredients: #{recipe_api["ingredients"]}"
-        puts "#{line_break}"
-        return_to_menu
+        if recipe_api['title'].downcase.include?(user_input)
+            puts "#{line_break}"
+            puts "Recipe: #{recipe_api["title"]}"
+            puts "Link to Recipe: #{recipe_api["href"]}"
+            puts "Ingredients: #{recipe_api["ingredients"]}"
+            puts "#{line_break}"
+            return_to_menu
+        else
+            puts "Invalid input, please try again."
+            view_recipe_favorites
+        end
 
     end 
 
@@ -253,26 +264,33 @@ class CommandLine
 
     def delete_recipe
         favorites = []
+        final = nil
         result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
         result.each_with_index do |ur, i|
-            recipe = Recipe.find(ur.recipe_id)
-            favorites << "#{i+1}. #{recipe.name.capitalize}"
+            final = Recipe.find(ur.recipe_id)
+            favorites << "#{i+1}. #{final.name.capitalize}"
         end
         puts "Here are your favorite Recipes!"
         puts "#{line_break}"
         puts favorites
         puts "Please enter the name of the recipe you would like to delete."
+
         user_input = gets.chomp.downcase
-        recipe_delete = Recipe.find_by(name: user_input)
-        result.each do |ur|
-            if ur.recipe_id == recipe_delete.id
-                UserRecipe.all.delete(ur.id)
-            end
-        end 
-        puts Rainbow(" 
-            Recipe deleted!
-            ").red
-        menu
+        if final.name.downcase.include?(user_input)
+            recipe_delete = Recipe.find_by(name: user_input)
+            result.each do |ur|
+                if ur.recipe_id == recipe_delete.id
+                    UserRecipe.all.delete(ur.id)
+                end
+            end 
+            puts Rainbow(" 
+                Recipe deleted!
+                ").red
+            menu
+        else 
+            puts "Invalid input, please try again."
+            delete_recipe
+        end
     end 
 
     def highest_rated_recipe
@@ -305,7 +323,7 @@ class CommandLine
     end
 
     def delete_account
-        puts "Do you want to delete this account?"
+        puts "Do you want to delete this account?(yes/no)"
         user_input = gets.chomp.downcase
             if user_input == 'yes'
                 User.all.delete($user)
@@ -320,6 +338,7 @@ class CommandLine
                 menu 
             else 
                 puts "Invalid input. Please type 'yes' or 'no'"
+                delete_account
             end 
     end
 
