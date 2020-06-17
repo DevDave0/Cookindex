@@ -13,10 +13,17 @@ def get_specific_recipe_from_api(user_input)
     results_hash.each do |results|
         if results["ingredients"] == user_input 
             recipe << results["title"]
+            Recipe.find_or_create_by(name: results["title"])
         end
     end
     recipe
 end
+
+
+
+def display_recipe_info(user_input)
+
+end 
 
 
 # binding.pry

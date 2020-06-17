@@ -92,31 +92,34 @@ class CommandLine
     def find_recipe_by_ingredient
         puts "Please enter ingredient name"
         user_input = gets.chomp
-
-        # get_specific_recipe_from_api(user_input)
-
-        if Ingredient.exists?(:name => user_input)
-            ing_id = Ingredient.find_by(:name => user_input)
-            result = RecipeIngredient.all.select{|ri| ri.ingredient_id == ing_id.id}
-            new_result = result.map{|ri| ri.recipe_id}
-            all_results = new_result.map do |id|
-                recipe = Recipe.find(id)
-                recipe.name
-            end 
+        api_array = get_specific_recipe_from_api(user_input)
+        if api_array == 0 
+            puts Rainbow("
+                Cannot find ingredient. Try something else!
+                ").red 
+            find_recipe_by_ingredient
+        else 
+        # if Ingredient.exists?(:name => user_input)
+        #     ing_id = Ingredient.find_by(:name => user_input)
+        #     result = RecipeIngredient.all.select{|ri| ri.ingredient_id == ing_id.id}
+        #     new_result = result.map{|ri| ri.recipe_id}
+        #     all_results = new_result.map do |id|
+        #         recipe = Recipe.find(id)
+        #         recipe.name
+        #     end 
 
             recipe_names = [ ] 
-            all_results.each_with_index do |recipe, i| 
+            api_array.each_with_index do |recipe, i| 
                 recipe_names << "#{i+1}. #{recipe}"
             end 
 
             puts "Here are some recipes that have #{user_input}."
             puts recipe_names 
             view_recipe
-        else 
-            puts Rainbow("
-                Cannot find ingredient. Try something else!
-                ").red 
-            find_recipe_by_ingredient
+            # puts Rainbow("
+            #     Cannot find ingredient. Try something else!
+            #     ").red 
+            # find_recipe_by_ingredient
         end 
     end 
 
