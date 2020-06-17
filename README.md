@@ -1,6 +1,20 @@
-# CookIndex: The command line program to save your favorite recipes
+# CookIndex: A recipe command line program
+Flatiron School's module 1 project. 
+
+![cookindex]cookindex.png
 
 ## Project Details
+
+Cookindex is a command line application that allows a user to:
+1. Create an account that remembers recipes saved to that account. 
+2. Search for new recipes given an ingredient.
+3. Allows users to save recipes to a favorites list.
+4. Rate recipes on a scale of 1-10.
+5. Delete recipes off the users favorites. 
+6. Delete the account of the user. 
+
+This application gathers its recipe data from the API: recipepuppy.com
+
 
 
 
