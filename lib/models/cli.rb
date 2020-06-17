@@ -23,7 +23,7 @@ class CommandLine
             user_name = gets.chomp.downcase
             if User.exists?(:name => user_name)
                 $user = User.find_by(name: user_name)
-                puts "Welcome back, #{$user.name}!"
+                puts Rainbow("Welcome back, #{$user.name}!").coral
             else
                 puts Rainbow("We could not find your username").red
                 add_new_user
@@ -130,6 +130,7 @@ class CommandLine
                         puts "Please give this recipe a rating(0-10)"
                         input = gets.chomp 
                         UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
+                        puts Rainbow("Recipe saved!").cyan
                         menu
                     end
                     
