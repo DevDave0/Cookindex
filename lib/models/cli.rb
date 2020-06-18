@@ -174,7 +174,7 @@ class CommandLine
                 if input == 'yes'
                     result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
                     id_array = result.map{|ri| ri.recipe_id}
-                    name_array = id_array.map yesdo |id|
+                    name_array = id_array.map do |id|
                         recipe_name = Recipe.find(id)
                         recipe_name.name
                     end
