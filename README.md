@@ -13,7 +13,7 @@ Cookindex is a command line application that allows a user to:
 5. Delete recipes off the users favorites. 
 6. Delete the account of the user. 
 
-Video Demo link: 
+Video Demo link: https://youtu.be/hdhr5TliaoQ
 
 This application gathers its recipe data from the API: recipepuppy.com
 
