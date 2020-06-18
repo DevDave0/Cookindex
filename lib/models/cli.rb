@@ -101,14 +101,6 @@ class CommandLine
                 ").red 
             find_recipe_by_ingredient
         else 
-        # if Ingredient.exists?(:name => user_input)
-        #     ing_id = Ingredient.find_by(:name => user_input)
-        #     result = RecipeIngredient.all.select{|ri| ri.ingredient_id == ing_id.id}
-        #     new_result = result.map{|ri| ri.recipe_id}
-        #     all_results = new_result.map do |id|
-        #         recipe = Recipe.find(id)
-        #         recipe.name
-        #     end 
 
             recipe_names = [ ] 
             api_array.each_with_index do |recipe, i| 
@@ -118,10 +110,6 @@ class CommandLine
             puts "Here are some recipes that have #{user_input}."
             puts recipe_names 
             view_recipe
-            # puts Rainbow("
-            #     Cannot find ingredient. Try something else!
-            #     ").red 
-            # find_recipe_by_ingredient
         end 
     end 
 
@@ -131,8 +119,6 @@ class CommandLine
         puts "#{line_break}"
         user_input = gets.chomp.downcase
         recipe_api = view_recipe_api(user_input)
-
-        # binding.pry
 
         if recipe_api['title'].downcase.include?(user_input)
             puts "#{line_break}"
@@ -145,43 +131,6 @@ class CommandLine
             puts "Invalid input, please try again."
             view_recipe 
         end
-        # add downcase when we get api info
-        # if Recipe.exists?(:name => user_input.downcase)
-        #     recipe = Recipe.find_by(:name => user_input.downcase)
-        #     #puts recipe.name #and more info about the recipe
-
-            # puts "Would you like to save this recipe to your favorites? (yes/no) "
-            # user_input = gets.chomp.downcase
-            #     if user_input == 'yes'
-            #         result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
-            #         id_array = result.map{|ri| ri.recipe_id}
-            #         name_array = id_array.map do |id|
-            #             recipe_name = Recipe.find(id)
-            #             recipe_name.name
-            #         end
-                    
-            #         if name_array.include?(recipe.name)
-            #             puts Rainbow("
-            #                 This recipe is already in your favorites
-            #                 ").red
-            #             menu
-            #         else 
-            #             puts "Please give this recipe a rating(0-10)"
-            #             input = gets.chomp 
-            #             UserRecipe.create(user_id: $user.id, recipe_id: recipe.id, rating: input.to_i)
-            #             puts Rainbow("Recipe saved!").cyan
-            #             menu
-            #         end
-
-            #     else
-            #         menu
-            #     end
-        # else 
-        #     puts Rainbow("
-        #         Cannot find recipe. Try something else!
-        #         ").red
-        #     view_recipe 
-        # end
     end
 
     def view_recipe_favorites
@@ -225,7 +174,7 @@ class CommandLine
                 if input == 'yes'
                     result = UserRecipe.all.select{|ur| ur.user_id == $user.id}
                     id_array = result.map{|ri| ri.recipe_id}
-                    name_array = id_array.map do |id|
+                    name_array = id_array.map yesdo |id|
                         recipe_name = Recipe.find(id)
                         recipe_name.name
                     end
@@ -315,11 +264,8 @@ class CommandLine
         puts "Here are your highest rated recipes!"
         puts "#{line_break}"
         puts neat_array
-
         view_recipe_favorites
-        
         return_to_menu
-
     end
 
     def delete_account
@@ -355,10 +301,6 @@ class CommandLine
 
     def line_break
         return "--------------------------------------------------------------------------------"
-    end
-
-    def practice
-        binding.pry
     end
 
 end
